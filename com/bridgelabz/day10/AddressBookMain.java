@@ -1,7 +1,9 @@
 package com.bridgelabz.day10;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.Set;
 
 class Contact {
 	private String firstName;
@@ -94,107 +96,148 @@ class Contact {
 
 public class AddressBookMain extends Contact {
 
+	public ArrayList<Contact> createAddressBook() {
+		ArrayList<Contact> arr = new ArrayList<Contact>();
+		return arr;
+	}
+	
 	public static void main(String args[])
 	{
 		System.out.println("Welcome to address book");
-		ArrayList<Contact> arr = new ArrayList<Contact>();
+		Hashtable<String, ArrayList<Contact>> ht = new Hashtable<String, ArrayList<Contact>>();
+
 		AddressBookMain adrs = new AddressBookMain();
 
 		Scanner sc1 = new Scanner(System.in);
 
 		int choice = 0;
+		int bookchoice = 0;
+		int key = 1;
 
 		do {
-			System.out.println("1.Add contact");
-			System.out.println("2.Edit contact");
-			System.out.println("3.Delete contact");
-			System.out.println("4.Display address book");
-			System.out.println("5.Exit");
-			System.out.println("\nEnter your choice");
+			System.out.println("1.create Address Book");
+			System.out.println("2.select and use Address book");
+			System.out.println("3.Display address books");
+			System.out.println("4.Exit");
+			System.out.println("Enter your choice");
+			bookchoice = sc1.nextInt();
 
-			choice = sc1.nextInt();
-
-			switch (choice) {
+			switch (bookchoice) {
 			case 1:
-					arr.add(adrs.createContact());
+				System.out.println("Enter name of Address Book");
+				String bookname = sc1.next();
+				ht.put(bookname, adrs.createAddressBook());
 				break;
 			case 2:
-				if (arr.size() == 0) {
-					System.out.println("No data in address book! Add contacts!");
-				} else {
-					System.out.println("Enter name of person to edit his details");
-					String name = sc1.next();
+				System.out.println("Enter name of address book to use");
+				String bknm = sc1.next();
+				if(ht.containsKey(bknm))
+				{
+				do {
+					System.out.println("1.Add contact");
+					System.out.println("2.Edit contact");
+					System.out.println("3.Delete contact");
+					System.out.println("4.Display contacts in address book");
+					System.out.println("5.Exit");
+					System.out.println("\nEnter your choice");
 
-					for (int i = 0; i < arr.size(); i++) {
-						if (arr.get(i).getFirstName().equalsIgnoreCase(name)) {
-							System.out.println("Change first name");
-							String fname = sc1.next();
-							arr.get(i).setFirstName(fname);
+					choice = sc1.nextInt();
 
-							System.out.println("Change last name");
-							String lname = sc1.next();
-							arr.get(i).setLastName(lname);
+					switch (choice) {
+					case 1:
+						ht.get(bknm).add(adrs.createContact());
+						break;
+					case 2:
+						if (ht.get(bknm).size() == 0) {
+							System.out.println("No data in address book " + bknm + "! Add contacts!");
+						} else {
+							System.out.println("Enter name of person to edit his details");
+							String name = sc1.next();
 
-							System.out.println("Change address");
-							String address = sc1.next();
-							arr.get(i).setAddress(address);
+							for (int i = 0; i < ht.get(bknm).size(); i++) {
+								if (ht.get(bknm).get(i).getFirstName().equalsIgnoreCase(name)) {
+									System.out.println("Change first name");
+									String fname = sc1.next();
+									ht.get(bknm).get(i).setFirstName(fname);
 
-							System.out.println("Change city");
-							String city = sc1.next();
-							arr.get(i).setCity(city);
+									System.out.println("Change last name");
+									String lname = sc1.next();
+									ht.get(bknm).get(i).setLastName(lname);
 
-							System.out.println("Change state");
-							String state = sc1.next();
-							arr.get(i).setState(state);
+									System.out.println("Change address");
+									String address = sc1.next();
+									ht.get(bknm).get(i).setAddress(address);
 
-							System.out.println("Change zip");
-							String zip = sc1.next();
-							arr.get(i).setZip(zip);
+									System.out.println("Change city");
+									String city = sc1.next();
+									ht.get(bknm).get(i).setCity(city);
 
-							System.out.println("Change phone");
-							String phone = sc1.next();
-							arr.get(i).setPhone(phone);
+									System.out.println("Change state");
+									String state = sc1.next();
+									ht.get(bknm).get(i).setState(state);
 
-							System.out.println("Change email");
-							String email = sc1.next();
-							arr.get(i).setEmail(email);
-							break;
-						} else if (i == arr.size()-1)
-							System.out.println("Person with given name " + name + " does not exist!");
+									System.out.println("Change zip");
+									String zip = sc1.next();
+									ht.get(bknm).get(i).setZip(zip);
+
+									System.out.println("Change phone");
+									String phone = sc1.next();
+									ht.get(bknm).get(i).setPhone(phone);
+
+									System.out.println("Change email");
+									String email = sc1.next();
+									ht.get(bknm).get(i).setEmail(email);
+									break;
+								} else if (i == ht.get(bknm).size() - 1)
+									System.out.println("Person with given name " + name + " does not exist!");
+							}
+						}
+						break;
+					case 3:
+						if (ht.get(bknm).size() == 0) {
+							System.out.println("AddressBook " + bknm + " is empty! no contact to delete");
+						} else {
+							System.out.println("Enter first name of person to delete contact");
+							String name = sc1.next();
+							for (int i = 0; i < ht.get(bknm).size(); i++) {
+								if (ht.get(bknm).get(i).getFirstName().equalsIgnoreCase(name)) {
+									ht.get(bknm).remove(i);
+									break;
+								} else if (i == ht.get(bknm).size() - 1) {
+									System.out.println(
+											"No person exist with name " + name + "in " + bknm + " address book !");
+								}
+							}
+						}
+						break;
+					case 4:
+						System.out.println("Displaying all contacts");
+						for (int i = 0; i < ht.get(bknm).size(); i++) {
+							ht.get(bknm).get(i).display();
+						}
+						break;
+					default:
+						System.out.println("Please enter valid choice");
 					}
+
+				} while (choice != 5);
+			}
+				else
+					System.out.println("Address book with name " + bknm + " does not exist!");
+				break;
+			case 3:
+				System.out.println("List of available address books");
+				Set<String> booklist = ht.keySet();
+				for (String book : booklist) {
+					System.out.println(book);
 				}
 				break;
-			case 3:if (arr.size() == 0) {
-				System.out.println("AddressBook is empty! no contact to delete");
-			} 
-			else
-			{
-				System.out.println("Enter first name of person to delete contact");
-				String name = sc1.next();
-				for (int i = 0; i < arr.size(); i++) {
-					if (arr.get(i).getFirstName().equalsIgnoreCase(name)) {
-						arr.remove(i);
-						break;
-					}
-					else if(i == arr.size()-1)
-					{
-						System.out.println("No person exist with name " + name + " !");
-					}
-				}
-			}
-			break;
 			case 4:
-				System.out.println("Displaying all contacts");
-				for (int i = 0; i < arr.size(); i++) {
-					arr.get(i).display();
-				}
 				break;
 			default:
 				System.out.println("Please enter valid choice");
 			}
-
-		} while (choice != 5);
-
+		} while (bookchoice != 4);
 		sc1.close();
 	}
 
